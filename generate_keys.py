@@ -12,26 +12,30 @@ def generate_keys():
     # Derive the public key for encryption from the private key
     public_key = private_key.public_key()
 
-    # Convert the private key to PEM format
-    private_pem = private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption(),
-    )
+    # Save the private key (decryption key) to a file
+    with open("private_key.pem", "wb") as private_file:
+        private_file.write(
+            private_key.private_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PrivateFormat.TraditionalOpenSSL,
+                encryption_algorithm=serialization.NoEncryption(),
+            )
+        )
 
-    # Convert the public key to PEM format
-    public_pem = public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo,
-    )
+    # Save the public key (encryption key) to a file
+    with open("public_key.pem", "wb") as public_file:
+        public_file.write(
+            public_key.public_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PublicFormat.SubjectPublicKeyInfo,
+            )
+        )
 
-    # Output the keys to the CLI
-    print("Encryption Key (Public Key):")
-    print(public_pem.decode("utf-8"))
-    print("\nDecryption Key (Private Key):")
-    print(private_pem.decode("utf-8"))
+    print("Keys generated successfully:")
+    print("- 'public_key.pem' (encryption key) to share for encryption.")
+    print("- 'private_key.pem' (decryption key) to keep private for decryption.")
 
 
-# Run the function to generate and display keys
+# Run the function to generate and save keys as files
 if __name__ == "__main__":
     generate_keys()
